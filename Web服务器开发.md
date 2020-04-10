@@ -83,11 +83,11 @@ console的结果就是D:/Movie/www目录下所有的文件夹、文件
 
 #### 第二步：使用模板引擎将得到的文件名和目录名渲染到 template.html 中
 
-2.1 安装：npm i art-template
+  1 安装：npm i art-template
 
-2.2 导入：var template = require('art-template')
+  2 导入：var template = require('art-template')
 
-2.3 使用render方法将需要替换的内容渲染到模板html中：
+  3 使用render方法将需要替换的内容渲染到模板html中：
 
 render()有两个参数，第一个是模板html数据，第二个是供替换的内容，例如：
 
@@ -156,11 +156,11 @@ html文件中，使用art-template模板语法each，遍历渲染需要替换的
 
 服务端渲染
 
-<img src="https://github.com/FooderLeoYo/Nodejs-StudyNote/blob/master/assets/img/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93.png">
+![pic](https://github.com/FooderLeoYo/NodeJS-StudyNote/blob/master/assets/img/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93.png)
 
 客户端渲染
 
-<img src="https://github.com/FooderLeoYo/Nodejs-StudyNote/blob/master/assets/img/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B8%B2%E6%9F%93.png">
+![pic](https://github.com/FooderLeoYo/NodeJS-StudyNote/blob/master/assets/img/%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B8%B2%E6%9F%93.png)
 
 ### 两种渲染方式使用时机的区别
 
