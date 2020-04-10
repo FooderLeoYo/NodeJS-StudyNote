@@ -1,0 +1,300 @@
+# 模块系统
+
+---
+
+## 目录
+
+[什么是模块化](#jump1)
+
+[CommonJS模块规范](#jump2)
+                      
+[导出exports](#jump3)
+
+[加载require](#jump4)
+
+[npm](#jump5)
+
+---	
+
+<span id="jump1"></span>
+## 什么是模块化
+
+模块化具有以下特性
+
++ 文件作用域
+
++ 通信规则
+
+  - 加载require  
+
+  - 导出
+
+---
+
+<span id="jump2"></span>
+## CommonJS模块规范
+
+在Node中的JS还有一个很重要的概念：模块系统
+
+  + 模块作用域
+
+  + 使用require方法来加载模块
+
+  + 使用exports接口对象来导出模块中的成员
+
+### 加载require
+
+语法：
+```
+var 自定义变量名 = require('模块')
+```
+
+require的两个作用：
+
+	+ 执行被加载模块中的代码
+
+	+ 得到被加载模块中的exports导出对象接口
+
+### 导出exports
+
+	+ Node中是模块作用域，默认文件中所有的成员只在当前文件模块有效
+
+	+ 对于希望可以被其他模块访问的成员，就需要把这些公开的成员都挂载到exports接口对象上
+
+	+ 模块系统在程序最后会return一个module.exports对象，只不过是在底层我们看不到
+
+---
+
+<span id="jump3"></span>
+## 导出exports
+
+### exports和module.exports
+
+在 Node 中，每个模块内部都有一个自己的module对象，该module对象中，有一个成员叫：exports，也是一个对象
+
+也就是说如果你需要对外导出成员，只需要把导出的成员挂载到 module.exports 中
+
+我们发现，每次导出接口成员的时候都通过 module.exports.xxx = xxx 的方式很麻烦，点儿的太多了
+
+所以，Node 为了简化你的操作，专门提供了一个变量：exports 等于 module.exports
+
+```
+module.exports.foo = 'bar';
+//等价于
+exports.foo = 'bar';
+```
+
+### 不能用exports = xxx的方式导出的原理
+
+exports 等价于 module.exports，就是说在模块中隐含这么一句代码：
+
+```
+var exports = module.exports
+```
+
+这时如果给exports赋值，就会断开和module.exports之间的联系，即exports会指向一块新的内存空间而不是module.exports
+
+而模块系统最终隐式return的是module.exports，因此无论exports中的成员是什么都没用
+
+同理，给 module.exports 重新赋值也会断开
+
+### 导出多个成员和导出单个成员
+
+导出多个成员（拿到的是对象）：
+
+```
+exports.a = 123;
+exports.b = function(){
+    console.log('bbb')
+};
+exports.c = {
+    foo:"bar"
+};
+exports.d = 'hello';
+```
+
+导出单个成员（拿到的是函数，字符串）：
+
+```
+module.exports = 'hello';
+```
+
+以下情况会覆盖：
+
+```
+module.exports = 'hello';
+//后者会覆盖前者
+module.exports = function add(x,y) {
+    return x+y;
+}
+```
+
+也可以通过以下方法来导出多个成员：
+
+```
+module.exports = {
+    foo = 'hello',
+    add:function(){
+        return x+y;
+    }
+};
+```
+
+---
+
+<span id="jump4"></span>
+## 加载require
+
+### 优先从缓存加载
+
+	比如a中引用了b之后又引用了c，b中也引用了c，而b、c中均有一个console
+	
+	运行顺序：a require b -> b reuire c -> c console -> b console -> a require c（但不再进入c执行打印）
+
+	运行结果b、c只会各打印一次，而不是b打印一次c打印两次
+
+	因为c第一次打印后被缓存了，因此当a require c时，将不再进入c执行打印
+
+
+### 判断模块标识符
+
+ - 核心模块
+ 
+核心模块的本质也是文件，核心模块文件已经被编译到了二进制文件中了，我们只需要按照名字来加载就可以了
+
+```
+require('fs')
+```
+
+- 第三方模块（node_modules）
+
+	- 第三方模块的标识就是第三方模块的名称
+
+	- 不可能有第三方模块和核心模块的名字一致
+
+	- 凡是第三方模块都必须通过 npm 来下载
+
+	- 使用的时候就可以通过 require('包名') 的方式来进行加载才可以使用
+	
+- 自己写的模块（路径形式的模块）
+
+### 模块查找机制
+
+1. 优先从缓存加载
+
+2. 核心模块
+
+3. 路径形式的文件模块
+
+4. 第三方模块
+
+具体步骤如下：
+
+```
+先找到当前文件所处目录中的 node_modules 目录
+node_modules/art-template
+node_modules/art-template/package.json 文件
+node_modules/art-template/package.json 文件中的 main 属性
+main 属性中就记录了 art-template 的入口模块
+然后加载使用这个第三方包,实际上最终加载的还是文件
+如果 package.json 文件不存在或者 main 指定的入口模块是也没有
+则 node 会自动找该目录下的 index.js，也就是说 index.js 会作为一个默认备选项
+如果以上所有任何一个条件都不成立，则会进入上一级目录中的 node_modules 目录查找
+如果上一级还没有，则继续往上上一级查找
+...
+如果直到当前磁盘根目录还找不到，最后报错：can not find module xxx
+```
+
+注意：我们一个项目有且只有一个 node_modules，放在项目根目录中
+
+这样的话项目中所有的子目录中的代码都可以加载到第三方包
+
+---
+
+<span id="jump5"></span>
+## npm
+
+### 什么是npm
+
+- node package manage(node包管理器)
+- 在安装时加上--save会主动生成说明书文件信息（将安装文件的信息添加到package.json里面）
+
+### npm命令行工具
+
+npm是一个命令行工具，只要安装了node就已经安装了npm。
+
+npm也有版本概念，可以通过`npm --version`来查看npm的版本
+
+升级npm(自己升级自己)：
+
+```
+npm install --global npm
+```
+
+### 常用命令
+
+- npm init(生成package.json说明书文件)
+  - npm init -y(可以跳过向导，快速生成)
+- npm install
+  - 一次性把dependencies选项中的依赖项全部安装
+  - 简写（npm i）
+- npm install 包名
+  - 只下载
+  - 简写（npm i 包名）
+- npm install --save 包名
+  - 下载并且保存依赖项（package.json文件中的dependencies选项）
+  - 简写（npm i  包名）
+- npm uninstall 包名
+  - 只删除，如果有依赖项会依然保存
+  - 简写（npm un 包名）
+- npm uninstall --save 包名
+  - 删除的同时也会把依赖信息全部删除
+  - 简写（npm un 包名）
+- npm help
+  - 查看使用帮助
+- npm 命令 --help
+  - 查看具体命令的使用帮助（npm uninstall --help）
+
+### 解决npm被墙问题
+
+npm存储包文件的服务器在国外，有时候会被墙，速度很慢，所以需要解决这个问题。
+
+#### 安装淘宝的cnpm：
+
+```javascript
+npm install -g cnpm --registry=https://registry.npm.taobao.org;
+```
+
+```shell
+#在任意目录执行都可以
+#--global表示安装到全局，而非当前目录
+#--global不能省略，否则不管用
+npm install --global cnpm
+```
+
+安装包的时候把以前的`npm`替换成`cnpm`。
+
+```shell
+#走国外的npm服务器下载jQuery包，速度比较慢
+npm install jQuery;
+
+#使用cnpm就会通过淘宝的服务器来下载jQuery
+cnpm install jQuery;
+```
+
+如果不想安装`cnpm`又想使用淘宝的服务器来下载：
+
+```shell
+npm install jquery --registry=https://npm.taobao.org;
+```
+
+但是每次手动加参数就很麻烦，所以我们可以把这个选项加入到配置文件中：
+
+```shell
+npm config set registry https://npm.taobao.org;
+
+#查看npm配置信息
+npm config list;
+```
+
+只要经过上面的配置命令，则以后所有的`npm install`都会通过淘宝的服务器来下载
