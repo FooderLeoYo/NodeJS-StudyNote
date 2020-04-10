@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="/public/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="header container">
+    <div class="page-header">
+      <h1><a href="/">首页</a> <small>发表评论</small></h1>
+    </div>
+  </div>
+  <div class="comments container">
+    <!-- 表单异步提交要3个东西 -->
+    <!-- 1. action 就是表单提交的地址，说白了就是请求的 url 地址 -->
+    <!-- 2. method 请求方法：get/post -->
+    <!-- 3. name：name属性用于对提交到服务器后的表单数据进行标识，只有设置了name属性的表单元素才能在提交表单时传递它们的值 -->
+
+    <!-- 这里的method应该用post，用get是因为比较简单清晰 -->
+    <form action="/pinglun" method="get">
+      <div class="form-group">
+        <!-- for的值为内元素input的id，规定 label 与哪个表单元素绑定 -->
+        <label for="input_name">你的大名</label>
+        <!-- name="name"到时候就是query中的name属性 -->
+        <input type="text" class="form-control" required minlength="2" maxlength="10" id="input_name" name="name"
+          placeholder="请写入你的姓名">
+      </div>
+      <div class="form-group">
+        <label for="textarea_message">留言内容</label>
+        <!-- name="message"到时候就是query中的message属性 -->
+        <textarea class="form-control" name="message" id="textarea_message" cols="30" rows="10" required minlength="5"
+          maxlength="20"></textarea>
+      </div>
+      <button type="submit" class="btn btn-default">发表</button>
+    </form>
+  </div>
+</body>
+
+</html>
