@@ -12,12 +12,7 @@
 
 [路由](#jump5)
 
-
-
-
-[处理表单](#jump9)
-
-[综合案例：留言板](#jump10)
+[综合案例：具备增删改查功能的学生信息系统](#jump6)
 
 ---	
 
@@ -240,3 +235,8 @@ var router = require('./router');
 
 app.use(router);
 ```
+
+---
+
+<span id="jump6"></span>
+[综合案例：具备增删改查功能的学生信息系统](https://github.com/FooderLeoYo/NodeJS-StudyNote/tree/master/assets/projects/学生信息系统)
