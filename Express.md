@@ -239,4 +239,5 @@ app.use(router);
 ---
 
 <span id="jump6"></span>
-[综合案例：具备增删改查功能的学生信息系统](https://github.com/FooderLeoYo/NodeJS-StudyNote/tree/master/assets/projects/学生信息系统)
+## 综合案例：具备增删改查功能的学生信息系统
+[学生信息系统](https://github.com/FooderLeoYo/NodeJS-StudyNote/tree/master/assets/projects/学生信息系统)
