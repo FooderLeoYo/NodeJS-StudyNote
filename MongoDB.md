@@ -170,7 +170,7 @@ plug in your own promise library instead: http://mongoosejs.com/docs/promises.ht
 
 - 安装自己喜欢的Promise，并将mongoose的Promise设置为该Promise:
 
-```
+```javascript
 // bluebird是某个promise，也可以改成自己喜欢的
 mongoose.Promise = require('bluebird');
 ```
@@ -195,13 +195,13 @@ user.save()
 
 - 按条件查询匹配的第一个表
 
-```
+```javascript
 User.findOne({
   // 查询条件，可写多个
   username: 'zs',
   password: '123456'
-}).catch(() => console.log('查询失败'))
-.then((res) => console.log(res))
+}).then((res) => console.log(res))
+  .catch(() => console.log('查询失败'))
 ```
 
 #### .find()
@@ -210,13 +210,13 @@ User.findOne({
 
 - 如果条件不写，则是查询所有的表
 
-```
+```javascript
 User.find({
   // 查询条件，可写多个
   username: 'zs',
   password: '123456'
-}).catch(() => console.log('查询失败'))
-.then((res) => console.log(res))
+}).then((res) => console.log(res))
+  .catch(() => console.log('查询失败'))
 ```
 
 ### 删除
@@ -225,24 +225,24 @@ User.find({
 
 - 删除第一个符合条件的表
 
-```
+```javascript
 User.deleteOne({
   // 查询条件
   username: 'zs'
-}).catch(() => console.log('删除失败'))
-  .then(() => console.log('删除成功'));
+}).then(() => console.log('删除成功'));
+  .catch(() => console.log('删除失败'))
 ```
 
 #### .deleteMany()
 
 - 删除所有符合条件的表
 
-```
+```javascript
 User.deleteMany({
   // 查询删除条件
   username: 'zs'
-}).catch(() => console.log('删除失败'))
-  .then(() => console.log('删除成功'));
+}).then(() => console.log('删除成功'));
+  .catch(() => console.log('删除失败'))
 ```
 
 ### 更新
@@ -251,28 +251,28 @@ User.deleteMany({
 
 - 更新第一个符合条件的表
 
-```
+```javascript
 User.updateOne({
   // 需要改的属性
   email: 'admin@admin.com'
 }, {
   // 修改成
   email: 'updated@admin.com'
-}).catch(() => console.log('修改失败'))
-  .then(() => console.log('修改成功'));
+}).then(() => console.log('修改成功'));
+  .catch(() => console.log('修改失败'))
 ```
 
 #### .updateMany()
 
 - 更新所有符合条件的表
 
-```
+```javascript
 User.updateMany({
   // 需要改的属性
   email: 'admin@admin.com'
 }, {
   // 修改成
   email: 'updated@admin.com'
-}).catch(() => console.log('修改失败'))
-  .then(() => console.log('修改成功'));
+}).then(() => console.log('修改成功'));
+  .catch(() => console.log('修改失败'))
 ```
