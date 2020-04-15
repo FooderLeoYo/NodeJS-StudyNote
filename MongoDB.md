@@ -41,7 +41,7 @@
 <span id="jump2"></span>
 ## 启动和关闭数据库
 
-- 启动
+启动
 
 ```shell
 # mongodb 默认使用执行mongod 命令所处盘符根目录下的/data/db作为自己的数据存储目录
@@ -59,7 +59,7 @@ mongod --dbpath = 数据存储目录路径
 
 但是这么改的话每次重新进入时都要打--dbpath = 数据存储目录路径，因此推荐使用默认路径
 
-- 停止：
+停止：
 
 ```javascript
 在开启服务的控制台，直接Ctrl+C;
@@ -71,15 +71,14 @@ mongod --dbpath = 数据存储目录路径
 <span id="jump3"></span>
 ## 基本命令
 
-
-- 连接：
+连接：
 
 ```javascript
 # 该命令默认连接本机的 MongoDB 服务
 mongo
 ```
 
-- 退出：
+退出：
 
 ```javascript
 # 在连接状态输入 exit 退出连接
@@ -161,14 +160,14 @@ var User = mongoose.model('User', userSchema);
 
 ### 配置个人的promise
 
-- 官方说明：
+官方说明：
 
 ```
 Mongoose: mpromise (mongoose's default promise library) is deprecated
 plug in your own promise library instead: http://mongoosejs.com/docs/promises.html
 ```
 
-- 安装自己喜欢的Promise，并将mongoose的Promise设置为该Promise:
+安装自己喜欢的Promise，并将mongoose的Promise设置为该Promise:
 
 ```javascript
 // bluebird是某个promise，也可以改成自己喜欢的
@@ -184,16 +183,16 @@ var user = new User({
 	email: 'xiaochen@qq.com'
 });
 
-user.save()
-.catch(() => console.log('添加失败'))
-.then(() => console.log('添加成功'))
+user.save().then(() => console.log('添加成功'))
+	   .catch(() => console.log('添加失败'))
+
 ```
 
 ### 查询
 
 #### .findOne()
 
-- 按条件查询匹配的第一个表
+按条件查询匹配的第一个表
 
 ```javascript
 User.findOne({
@@ -206,9 +205,7 @@ User.findOne({
 
 #### .find()
 
-- 查询所有符合条件的表
-
-- 如果条件不写，则是查询所有的表
+查询所有符合条件的表，如果条件不写，则是查询所有的表
 
 ```javascript
 User.find({
@@ -223,7 +220,7 @@ User.find({
 
 #### .deleteOne()
 
-- 删除第一个符合条件的表
+删除第一个符合条件的表
 
 ```javascript
 User.deleteOne({
@@ -235,7 +232,7 @@ User.deleteOne({
 
 #### .deleteMany()
 
-- 删除所有符合条件的表
+删除所有符合条件的表
 
 ```javascript
 User.deleteMany({
@@ -249,7 +246,7 @@ User.deleteMany({
 
 #### .updateOne()
 
-- 更新第一个符合条件的表
+更新第一个符合条件的表
 
 ```javascript
 User.updateOne({
@@ -264,7 +261,7 @@ User.updateOne({
 
 #### .updateMany()
 
-- 更新所有符合条件的表
+更新所有符合条件的表
 
 ```javascript
 User.updateMany({
