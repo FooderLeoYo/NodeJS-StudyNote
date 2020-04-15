@@ -85,16 +85,37 @@ mongo
 exit
 ```
 
+数据库、集合、文档的基本命令：
+
+数据库：
+
 - `show dbs`
   - 查看数据库列表(数据库中的所有数据库)
+- `use 数据库名称`
+  - 切换到指定的数据库（如果没有会新建）
+- `db.dropDatabase()`
+  - 删除当前数据库
 - `db`
   - 查看当前连接的数据库
-- `use 数据库名称`
-  - 切换到指定的数据库，（如果没有会新建）
+
+集合：
+
 - `show collections`
-  - 查看当前目录下的所有数据表
-- `db.表名.find()`
-  - 查看表中的详细信息
+  - 查看当前数据库下的所有集合
+- `db.createCollection(name, options)`
+  - 创建集合
+- `db.集合名.drop()`
+  - 删除集合
+
+文档对象：
+- `db.集合名.insert(document)`
+  - 插入文档
+- `db.集合名.remove()`
+  - 删除文档
+- `db.集合名.update()`
+  - 更新文档
+- `db.集合名.find()`
+  - 查看集合中的文档
 
 ---
 
@@ -120,22 +141,19 @@ exit
 ```javascript
 // 1.引包
 // 注意：按照后才能require使用
-var mongoose = require('mongoose');
-
-// 拿到schema图表
-var Schema = mongoose.Schema;
+let mongoose = require('mongoose');
 
 // 2.连接数据库
 // 指定连接数据库后不需要存在，当你插入第一条数据库后会自动创建数据库
-var promise = mongoose.connect('mongodb://localhost/test', {
-  useMongoClient: true,
-  /* other options */
+mongoose.connect('mongodb://localhost/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 // 3.设计集合结构（表结构）
 // 用户表
-var userSchema = new Schema({
-	username: { //姓名
+let userSchema = new mongoose.Schema({
+	username: { 
 		type: String,
 		require: true //添加约束，保证数据的完整性，让数据按规矩统一
 	},
@@ -155,14 +173,16 @@ var userSchema = new Schema({
 // 					例如 这里会变成users集合名称
 // 		第二个参数：架构
 // 	返回值：模型构造函数
-var User = mongoose.model('User', userSchema);
+let User = mongoose.model('User', userSchema);
 ```
 
-### 配置个人的promise
+### 配置个人的Promise
+
+如果想要在mongoose中使用Promise，则需要安装第三方Promise并并将mongoose的Promise设置为该Promise
 
 官方说明：
 
-```
+```shell
 Mongoose: mpromise (mongoose's default promise library) is deprecated
 plug in your own promise library instead: http://mongoosejs.com/docs/promises.html
 ```
@@ -170,106 +190,113 @@ plug in your own promise library instead: http://mongoosejs.com/docs/promises.ht
 安装自己喜欢的Promise，并将mongoose的Promise设置为该Promise:
 
 ```javascript
-// bluebird是某个promise，也可以改成自己喜欢的
+// bluebird是三方Promise，也可以改成自己喜欢的
 mongoose.Promise = require('bluebird');
 ```
 
-### 添加数据（增）
+### 添加数据
+
+- 成功后拿到的res为新增的表的数据
 
 ```javascript
-var user = new User({
-	username: 'admin',
-	password: '123456',
-	email: 'xiaochen@qq.com'
-});
-
-user.save().then(() => console.log('添加成功'))
-	   .catch(() => console.log('添加失败'))
-
+new User({ // 新建表数据
+  username: 'admin',
+  password: '123456',
+  email: 'xiaochen@qq.com'
+}).save((err, res) => { // 存入表数据
+  if (err) return handleError(err);
+  // do something with res
+})
 ```
 
 ### 查询
 
 #### .findOne()
 
-按条件查询匹配的第一个表
+- 按条件查询匹配的第一个表
+
+- 成功后拿到的res为查找到的表的数据
 
 ```javascript
-User.findOne({
-  // 查询条件，可写多个
-  username: 'zs',
-  password: '123456'
-}).then((res) => console.log(res))
-  .catch(() => console.log('查询失败'))
+User.findOne(查询条件, (err, res) => {
+  if (err) return handleError(err);
+  // do something with res
+})
 ```
 
 #### .find()
 
-查询所有符合条件的表，如果条件不写，则是查询所有的表
+- 查询所有符合条件的表，如果条件不写，则是查询所有的表
+
+- 成功后拿到的res为查找到的表的数据
 
 ```javascript
-User.find({
-  // 查询条件，可写多个
-  username: 'zs',
-  password: '123456'
-}).then((res) => console.log(res))
-  .catch(() => console.log('查询失败'))
+User.find(查询条件, (err, res) => {
+  if (err) return handleError(err);
+  // do someting with res
+})
 ```
 
 ### 删除
 
 #### .deleteOne()
 
-删除第一个符合条件的表
+- 删除第一个符合条件的表
 
 ```javascript
-User.deleteOne({
-  // 查询条件
-  username: 'zs'
-}).then(() => console.log('删除成功'));
-  .catch(() => console.log('删除失败'))
+User.deleteOne(查询条件, err => {
+  if (err) return handleError(err);
+})
 ```
 
 #### .deleteMany()
 
-删除所有符合条件的表
+- 删除所有符合条件的表
 
 ```javascript
-User.deleteMany({
-  // 查询删除条件
-  username: 'zs'
-}).then(() => console.log('删除成功'));
-  .catch(() => console.log('删除失败'))
+User.deleteMany(查询条件, err => {
+  if (err) return handleError(err);
+})
 ```
 
 ### 更新
 
 #### .updateOne()
 
-更新第一个符合条件的表
+- 更新第一个符合条件的表
+
+- 成功拿到的res不是修改后的表，而是：{ n: 0, nModified: 0, ok: 1 }，基本没用因此回调只写err
 
 ```javascript
-User.updateOne({
-  // 需要改的属性
-  email: 'admin@admin.com'
-}, {
-  // 修改成
-  email: 'updated@admin.com'
-}).then(() => console.log('修改成功'));
-  .catch(() => console.log('修改失败'))
+User.updateOne(查询条件, 修改后的数据, err => {
+  if (err) return handleError(err);
+})
 ```
 
 #### .updateMany()
 
-更新所有符合条件的表
+- 更新所有符合条件的表
+
+- 成功拿到的res不是修改后的表，而是：{ n: 0, nModified: 0, ok: 1 }，基本没用因此回调只写err
 
 ```javascript
-User.updateMany({
-  // 需要改的属性
-  email: 'admin@admin.com'
-}, {
-  // 修改成
-  email: 'updated@admin.com'
-}).then(() => console.log('修改成功'));
-  .catch(() => console.log('修改失败'))
+User.updateMany(查询条件, 修改后的数据, err => {
+  if (err) return handleError(err);
+})
+```
+
+### .findOneAndUpdate()
+
+- 拿到改动前的数据，然后进行更新
+
+- 成功拿到的res是改动前的数据
+
+```javascript
+// 想使用findOneAndUpdate，官方要求必须先set
+mongoose.set('useFindAndModify', false); 
+
+User.findOneAndUpdate(查询条件, 修改后的数据 (err, res) => {
+  if (err) return handleError(err);
+  // do something with old data(res)
+})
 ```
