@@ -29,27 +29,17 @@ cnpm install express
 
 ```javascript
 // 引入express
-var express = require('express');
+let express = require('express');
 
-// 1. 创建app
-var app = express();
+// 创建app
+let app = express();
 
-//  2. 
-app.get('/',function(req,res){
-    // 1
-    // res.write('Hello');
-    // res.write('World');
-    // res.end()
-
-    // 2
-    // res.end('hello world');
-
-    // 3
+app.get('/', (req,res) => {
     res.send('hello world');
 })
 
-app.listen(3000,function(){
-    console.log('express app is runing...');
+app.listen(3000, () => {
+	console.log('express app is runing...');
 })
 ```
 
@@ -82,19 +72,19 @@ app.get('/',function(req,res){
 
 	- 这种方式更容易辨识，推荐这种方式
 
-```
+```javascript
 app.use('/public', express.static('public'));
 ```
 
 + 第一个参数是自定义的url别名，所以也可以起别的名字，此时url必须是以/别名开头才能访问到
 
-```
+```javascript
 app.use('/alias', express.static('public'))
 ```
 
 + 第一个参数也可以省略，这种情况访问时，url以省略 /public 的方式来访问
 
-```
+```javascript
 app.use(express.static('public'))
 ```
 
@@ -125,13 +115,13 @@ res.render('html模板名', {模板数据})
 
 ```javascript
 // 模板文件index1.html就在views文件夹下
-app.get('/',function(req,res){
+app.get('/', (req,res) => {
     res.render('index1.html',{
            title:'hello world'     
     });
 })
 // 模板文件index2.html'在views文件夹内的insideFolder文件夹中
-app.get('/',function(req,res){
+app.get('/', (req,res) => {
     res.render('insideFolder/index2.html',{
            title:'hello world'     
     });
@@ -157,7 +147,7 @@ Express内置了一个api，可以直接通过`req.query`来获取数据
 ```javascript
 // 通过requery方法获取用户输入的数据
 // req.query只能拿到get请求的数据
- var comment = req.query;
+ let comment = req.query;
 ```
 
 ### 获取post请求数据
@@ -175,11 +165,11 @@ npm install --save body-parser
 配置解析表单 POST 请求体插件（注意：一定要在 app.use(router) 之前 ）
 
 ```javascript
-var express = require('express')
+let express = require('express')
 // 引包
-var bodyParser = require('body-parser')
+let bodyParser = require('body-parser')
 
-var app = express()
+let app = express()
 
 // 配置body-parser
 // 只要加入这个配置，则在req请求对象上会多出来一个属性：body
@@ -191,8 +181,8 @@ app.use(bodyParser.json())
 + 使用
 
 ```javascript
-app.post('/post', function (req, res) {
-	var comment = req.body // 可以通过req.body来获取表单请求数据
+app.post('/post', (req, res) => {
+	let comment = req.body // 可以通过req.body来获取表单请求数据
     comments.unshift(comment)
 	res.redirect('/')
 })
@@ -208,21 +198,18 @@ app.post('/post', function (req, res) {
 - router.js文件：
 
 ```javascript
-var fs = require('fs');
+let fs = require('fs');
 
-var express = require('express');
+let express = require('express');
 
 // 1 创建一个路由容器
-var router = express.Router();
+let router = express.Router();
 
 // 2 把路由都挂载到路由容器中
-router.get('/students/new',function(req,res){
+router.get('/students/new', (req,res) => {
     res.render('new.html')
 });
 
-router.get('/students/edit',function(req,res){
-    
-});
 
 // 3 把router导出
 module.exports = router;
@@ -231,7 +218,7 @@ module.exports = router;
 - app.js文件：
 
 ```
-var router = require('./router');
+let router = require('./router');
 
 app.use(router);
 ```
