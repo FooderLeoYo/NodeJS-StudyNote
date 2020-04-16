@@ -10,6 +10,8 @@
 
 [使用mongoose在Node中操作MongoDB数据库](#jump4)
 
+[综合案例：使用MongoDB优化学生系统](#jump5)
+
 ---	
 
 <span id="jump1"></span>
@@ -300,3 +302,10 @@ User.findOneAndUpdate(查询条件, 修改后的数据 (err, res) => {
   // do something with old data(res)
 })
 ```
+
+---
+
+<span id="jump5"></span>
+## 综合案例：使用MongoDB优化学生系统
+
+[MongoDB重构学生系统](https://github.com/FooderLeoYo/NodeJS-StudyNote/tree/master/assets/projects/使用MongoDB实现学生系统)
