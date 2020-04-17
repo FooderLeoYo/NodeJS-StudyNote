@@ -68,24 +68,24 @@ app.get('/',function(req,res){
 
 + url别名与资源别名一致
 
-	- 例如下面的例子中：当url以 /public 开头的时候，去 public 目录中找找对应的资源
+	- 例如下面的例子中：当url以 /public/ 开头的时候，去 ./public/ 目录中找找对应的资源
 
 	- 这种方式更容易辨识，推荐这种方式
 
 ```javascript
-app.use('/public', express.static('public'));
+app.use('/public/', express.static(path.join(__dirname, './public/')));
 ```
 
 + 第一个参数是自定义的url别名，所以也可以起别的名字，此时url必须是以/别名开头才能访问到
 
 ```javascript
-app.use('/alias', express.static('public'))
+app.use('/alias/', express.static(path.join(__dirname, './public/')));
 ```
 
 + 第一个参数也可以省略，这种情况访问时，url以省略 /public 的方式来访问
 
 ```javascript
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, './public/')));
 ```
 
 ---
