@@ -175,7 +175,10 @@ let userSchema = new mongoose.Schema({
 // 					例如 这里会变成users集合名称
 // 		第二个参数：架构
 // 	返回值：模型构造函数
-let User = mongoose.model('User', userSchema);
+/* 发布 */
+let User = mongoose.model('User', userSchema); // 在本文件中使用Schema
+// 或
+module.exports = mongoose.model('User', userSchema); // 在别的文件中使用Schema
 ```
 
 ### 配置个人的Promise
