@@ -196,6 +196,10 @@ app.post('/post', (req, res) => {
 
 ## 使用express-session插件记录用户登录信息
 
+如果仅仅使用cookie将用户信息保存在客户端，将无法阻止客户端恶意篡改信息（如篡改是否为vip会员）等安全问题的发生
+
+因此，需要实现将将用户登录信息保存到服务端，express-session便是一个实现这一功能的插件
+
 > 参考文档：https://github.com/expressjs/session
 
 安装：
