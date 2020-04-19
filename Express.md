@@ -4,11 +4,13 @@
 
 [起步](#jump1)
 
-[Express静态服务API](#jump2)
+[Express开放静态资源](#jump2)
                       
-[在Express中配置使用`art-templete`模板引擎](#jump3)
+[配置使用`art-templete`模板引擎](#jump3)
 
-[在Express中获取表单请求数据](#jump4)
+[通过body-parser获取表单请求数据](#jump4)
+
+[使用express-session插件记录用户登录信息](#jump7)
 
 [路由](#jump5)
 
@@ -62,7 +64,7 @@ app.get('/',function(req,res){
 ---
 
 <span id="jump2"></span>
-## Express静态服务API
+## Express开放静态资源
 
 ### 使用.use方法开放静态资源
 
@@ -91,7 +93,7 @@ app.use(express.static(path.join(__dirname, './public/')));
 ---
 
 <span id="jump3"></span>
-### 在Express中配置使用`art-templete`模板引擎
+### 配置使用`art-templete`模板引擎
 
 + 安装：
 
@@ -138,7 +140,7 @@ app.set('views',目录路径);
 ---
 
 <span id="jump4"></span>
-## 在Express中获取表单请求数据
+## 通过body-parser获取表单请求数据
 
 ### 获取get请求数据：
 
@@ -187,6 +189,51 @@ app.post('/post', (req, res) => {
 	res.redirect('/')
 })
 ```
+
+---
+
+<span id="jump7"></span>
+
+## 使用express-session插件记录用户登录信息
+
+> 参考文档：https://github.com/expressjs/session
+
+安装：
+
+```javascript
+npm install express-session
+```
+
+配置：
+
+```javascript
+app.use(session({
+  //配置加密字符串，他会在原有的基础上和字符串拼接起来去加密
+  //目的是为了增加安全性，防止客户端恶意伪造
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,//无论是否适用Session，都默认直接分配一把钥匙
+  cookie: { secure: true }
+}))
+```
+
+使用：
+
+```javascript
+//添加Session数据
+req.session.foo = 'bar';
+
+//获取session数据
+req.session.foo
+
+//删
+req.session.foo = null;
+delete req.session.foo
+```
+
+提示：
+
+默认Session数据是内存储数据，服务器一旦重启，真正的生产环境会把Session进行持久化存储
 
 ---
 
