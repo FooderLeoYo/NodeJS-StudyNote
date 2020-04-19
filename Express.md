@@ -198,8 +198,6 @@ app.post('/post', (req, res) => {
 - router.js文件：
 
 ```javascript
-let fs = require('fs');
-
 let express = require('express');
 
 // 1 创建一个路由容器
