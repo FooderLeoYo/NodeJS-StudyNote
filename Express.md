@@ -218,6 +218,7 @@ module.exports = router;
 ```
 let router = require('./router');
 
+// 注意，这一句一定要放在其他app.use的后面
 app.use(router);
 ```
 
