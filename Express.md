@@ -14,6 +14,8 @@
 
 [路由](#jump5)
 
+[中间件](#jump8)
+
 [综合案例：具备增删改查功能的学生信息系统](#jump6)
 
 ---	
@@ -269,9 +271,127 @@ module.exports = router;
 ```
 let router = require('./router');
 
-// 注意，这一句一定要放在除了404外其他app.use的后面
+// 注意，这一句一定要放在其他app.use的后面
 app.use(router);
 ```
+
+---
+
+<span id="jump8"></span>
+
+## 中间件
+
+### 中间件的概念
+
+> 参考文档：http://expressjs.com/en/guide/using-middleware.html
+
+中间件本身是一个方法，该方法接收三个参数：
+
+```
+Request 请求对象
+Response 响应对象
+next     下一个中间件
+```
+
+当请求进来，会从第一个中间件开始进行匹配
+
+   如果匹配，则进来
+
+      如果请求进入中间件之后，没有调用 next 则代码会停在当前中间件
+
+      如果调用了 next 则继续向后找到第一个匹配的中间件
+
+   如果不匹配，则继续判断匹配下一个中间件
+
+如果没有能匹配的中间件，则 Express 会默认输出：Cannot GET 路径
+
+### 中间件的分类:
+
+#### 应用程序级别的中间件
+
+万能匹配（不关心任何请求路径和请求方法的中间件）：
+
+```javascript
+app.use(function(req,res,next){
+    console.log('Time',Date.now());
+    next();
+});
+```
+
+关心请求路径的中间件：
+
+```javascript
+app.use('/a',function(req,res,next){
+    console.log('Time',Date.now());
+    next();
+});
+
+#### 路由级别的中间件
+
+严格匹配请求方法和请求路径的中间件
+
+此类中间件包括：get、post、put、delete等
+
+如下列中间件，就指定了请求方法为get，请求路径为'/'
+
+```javascript
+app.get('/',function(req,res){
+	res.send('get');
+});
+```
+
+#### 错误处理中间件
+
+##### 配置使用404中间件
+
+```javascript
+app.use((req,res) => {
+    res.render('404.html');
+});
+```
+
+##### 配置全局错误处理中间件
+
+```javascript
+// 发生错误时使用全局错误处理中间件
+app.get('/a', (req, res, next) => {
+	fs.readFile('.a/bc', (err, data) => {
+	    // 当发生全局错误的时候，我们可以调用next传递错误对象
+        // 然后被全局错误处理中间件匹配到并进行处理
+		if (err) next(err);
+	})
+});
+
+// 配置全局错误处理中间件
+app.use(function(err,req,res,next){
+    res.status(500).json({
+        err_code:500,
+        message:err.message
+    });
+});
+```
+
+注意：
+	1. .use()4个参数一个都不能少
+	2. 当调用next()传参后，则直接进入到全局错误处理中间件方法中，而不是下一个app.
+
+#### 内置中间件
+
+- express.static(提供静态文件)
+  - http://expressjs.com/en/starter/static-files.html#serving-static-files-in-express
+
+#### 第三方中间件
+
+> 参考文档：http://expressjs.com/en/resources/middleware.html
+
+- body-parser
+- compression
+- cookie-parser
+- mogran
+- response-time
+- server-static
+- session
+
 
 ---
 
