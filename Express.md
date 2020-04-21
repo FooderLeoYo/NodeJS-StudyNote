@@ -8,7 +8,7 @@
                       
 [配置使用`art-templete`模板引擎](#jump3)
 
-[通过body-parser获取表单请求数据](#jump4)
+[通过body-parser获取表单post请求数据](#jump4)
 
 [使用express-session插件记录用户登录信息](#jump7)
 
@@ -142,7 +142,7 @@ app.set('views',目录路径);
 ---
 
 <span id="jump4"></span>
-## 通过body-parser获取表单请求数据
+## 通过body-parser获取表单post请求数据
 
 ### 获取get请求数据：
 
