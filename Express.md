@@ -68,11 +68,21 @@ app.get('/',function(req,res){
 <span id="jump2"></span>
 ## Express开放静态资源
 
-### 使用.use方法开放静态资源
+### app.use()
+
+app.use是用来给path注册中间函数的，这个path默认是’/’
+
+path当然可以自定义，此时表示对应该path的url请求将会交给注册的中间函数来处理
+
+### express.static()
+
+用于提供对静态资源文件(图片、csss文件、javascript文件)的服务
+
+### 开放静态资源
 
 + url别名与资源别名一致
 
-	- 例如下面的例子中：当url以 /public/ 开头的时候，去 ./public/ 目录中找找对应的资源
+	- 例如下面的例子中：当url以```/public/```开头的时候，去```./public/```目录中找找对应的资源
 
 	- 这种方式更容易辨识，推荐这种方式
 
@@ -80,13 +90,13 @@ app.get('/',function(req,res){
 app.use('/public/', express.static(path.join(__dirname, './public/')));
 ```
 
-+ 第一个参数是自定义的url别名，所以也可以起别的名字，此时url必须是以/别名开头才能访问到
++ 第一个参数是自定义的url别名，所以也可以起别的名字，此时url必须是以```/别名```开头才能访问到静态资源
 
 ```javascript
 app.use('/alias/', express.static(path.join(__dirname, './public/')));
 ```
 
-+ 第一个参数也可以省略，这种情况访问时，url以省略 /public 的方式来访问
++ 第一个参数也可以省略，这种情况访问时，url以```/```开头（即所有url）时即可访问到静态资源
 
 ```javascript
 app.use(express.static(path.join(__dirname, './public/')));
@@ -95,7 +105,7 @@ app.use(express.static(path.join(__dirname, './public/')));
 ---
 
 <span id="jump3"></span>
-### 配置使用`art-templete`模板引擎
+## 配置使用`art-templete`模板引擎
 
 + 安装：
 
