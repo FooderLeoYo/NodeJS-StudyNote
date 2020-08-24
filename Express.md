@@ -256,6 +256,8 @@ delete req.session.foo
 <span id="jump5"></span>
 ## 路由
 
+express中的Router作用就是为了方便我们更好的根据路由去分模块。避免将所有路由都写在入口文件中
+
 ### 路由使用实例
 
 - router.js文件：
